@@ -13,7 +13,10 @@ window.onload = ()=>{
     axios.get('https://tarmeezacademy.com/api/v1/posts?limit=5')
     .then((response)=>{
         console.log(response);
+        let tags;
         let p = response.data.data.map((ele)=>{
+            tags = Array.isArray(ele.tags)
+            ? ele.tags.map(t => `<button type="button" class="btn btn-secondary mx-1">${t.name}</button>`).join(''): '';          
             return(
                 `
                     <div class="card shadow-sm my-2">
@@ -31,6 +34,7 @@ window.onload = ()=>{
                                 <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
                             </svg>
                             <b>(${ele.comments_count}) comment</b>
+                            <div class="d-flex">${tags}</div>
                         </div>
                     </div>
                 `
@@ -53,10 +57,10 @@ function loginBtnOnClick(){
         localStorage.setItem("token",response.data.token);
         localStorage.setItem("currentUser",JSON.stringify(response.data.user));
         bootstrap.Modal.getInstance(document.getElementById("exampleModal")).hide();
-        const toastElement = document.getElementById('toast-success');
         document.getElementById("login").style.display = "none";
         document.getElementById("register").style.display = "none";
         document.getElementById("logOut").style.display = "block";
+        const toastElement = document.getElementById('toast-success');
         let toast = new bootstrap.Toast(toastElement);
         toast.show();
     })
@@ -72,4 +76,32 @@ function logOut(){
     document.getElementById("logOut").style.display = "none";
     document.getElementById("login").style.display = "block";
     document.getElementById("register").style.display = "block";
+    const toastElement = document.getElementById('toast-success');
+    let toast = new bootstrap.Toast(toastElement);
+    toast.show();
+}
+function registerBtnClick(){
+    let userName = document.getElementById("register-userName").value;
+    let name = document.getElementById("register-name").value;
+    let password = document.getElementById("register-password").value;
+    axios.post('https://tarmeezacademy.com/api/v1/register', {
+    "username": userName,
+    "name": name,
+    "password": password
+    })
+    .then((response)=>{
+        localStorage.setItem("token",response.data.token);
+        localStorage.setItem("currentUser",JSON.stringify(response.data.user));
+        bootstrap.Modal.getInstance(document.getElementById("exampleModalRegister")).hide();
+        document.getElementById("login").style.display = "none";
+        document.getElementById("register").style.display = "none";
+        document.getElementById("logOut").style.display = "block";
+        const toastElement = document.getElementById('toast-success');
+        let toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    })
+    .catch((error)=>{
+        console.log(error);
+        //alert("Not found maybe password or userName is wrong");
+    });
 }
