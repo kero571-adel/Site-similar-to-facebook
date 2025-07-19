@@ -1,5 +1,15 @@
+function setupui(){
+    const token = localStorage.getItem("token");
+    if(token){
+        document.getElementById("login").style.display = "none";
+        document.getElementById("register").style.display = "none";
+    }else{
+        document.getElementById("logOut").style.display = "none";
+    }
+}
 let posts = document.querySelector(".posts");
 window.onload = ()=>{
+    setupui();
     axios.get('https://tarmeezacademy.com/api/v1/posts?limit=5')
     .then((response)=>{
         console.log(response);
@@ -44,6 +54,9 @@ function loginBtnOnClick(){
         localStorage.setItem("currentUser",JSON.stringify(response.data.user));
         bootstrap.Modal.getInstance(document.getElementById("exampleModal")).hide();
         const toastElement = document.getElementById('toast-success');
+        document.getElementById("login").style.display = "none";
+        document.getElementById("register").style.display = "none";
+        document.getElementById("logOut").style.display = "block";
         let toast = new bootstrap.Toast(toastElement);
         toast.show();
     })
@@ -51,4 +64,12 @@ function loginBtnOnClick(){
         console.log(error);
         alert("Not found maybe password or userName is wrong");
     });
+}
+function logOut(){
+    localStorage.removeItem("token");
+    localStorage.removeItem("currentUser");
+    //window.location.reload();
+    document.getElementById("logOut").style.display = "none";
+    document.getElementById("login").style.display = "block";
+    document.getElementById("register").style.display = "block";
 }

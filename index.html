@@ -26,8 +26,9 @@
                   </li>
                 </ul>
                 <div class="d-flex">
-                    <button type="button" class="btn btn-outline-success mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Login</button>
-                    <button type="button" class="btn btn-outline-success">Register</button>
+                  <button type="button" class="btn btn-outline-success mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal" id="login">Login</button>
+                  <button type="button" class="btn btn-outline-success" id="register">Register</button>
+                  <button type="button" class="btn btn-outline-danger" id="logOut" onclick="logOut()">log out</button>
                 </div>
               </div>
             </div>
@@ -50,11 +51,11 @@
             <form>
               <div class="mb-3">
                 <label for="recipient-name" class="col-form-label">userName:</label>
-                <input type="text" class="form-control" id="recipient-name">
+                <input type="text" class="form-control" id="recipient-name" value="kero">
               </div>
               <div class="mb-3">
                 <label for="message-text" class="col-form-label">Password:</label>
-                <input type="password" class="form-control" id="exampleInputPassword1">
+                <input type="password" class="form-control" id="exampleInputPassword1" value="123456">
               </div>
             </form>
           </div>
