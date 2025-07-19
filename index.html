@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css.css">
-    <link rel="stylesheet" href="bootstrap.min.css">
-    <link rel="stylesheet" href="./node_modules/bootstrap-icons/">
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
     <title>Document</title>
 </head>
 <body style="background-color: #f0ecff;">
@@ -27,7 +26,7 @@
                   </li>
                 </ul>
                 <div class="d-flex">
-                    <button type="button" class="btn btn-outline-success mx-2">Login</button>
+                    <button type="button" class="btn btn-outline-success mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Login</button>
                     <button type="button" class="btn btn-outline-success">Register</button>
                 </div>
               </div>
@@ -38,7 +37,44 @@
     <div class="container">
         <div class="posts  mt-3"></div>
     </div>
-    <script src="bootstrap.bundle.min.js"></script>
+    <!--Modals-->
+    <!--Login-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Login</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">userName:</label>
+                <input type="text" class="form-control" id="recipient-name">
+              </div>
+              <div class="mb-3">
+                <label for="message-text" class="col-form-label">Password:</label>
+                <input type="password" class="form-control" id="exampleInputPassword1">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="loginBtnOnClick()">Login</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--toast-->
+    <div class="toast align-items-center text-light bg-success border-0 position-fixed bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true" id="toast-success">
+      <div class="d-flex">
+        <div class="toast-body">
+          success.
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto text-lg" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./node_modules/axios/dist/axios.min.js"></script>
     <script src="javaScript.js"></script>
 </body>

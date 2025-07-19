@@ -1,6 +1,6 @@
 let posts = document.querySelector(".posts");
 window.onload = ()=>{
-    axios.get('https://tarmeezacademy.com/api/v1/posts?limit=50')
+    axios.get('https://tarmeezacademy.com/api/v1/posts?limit=5')
     .then((response)=>{
         console.log(response);
         let p = response.data.data.map((ele)=>{
@@ -31,4 +31,24 @@ window.onload = ()=>{
     .catch((error)=>{
         alert(error);
     })
+}
+function loginBtnOnClick(){
+    let userNameLogin = document.getElementById("recipient-name").value;
+    let passwordLogin = document.getElementById("exampleInputPassword1").value;
+    axios.post('https://tarmeezacademy.com/api/v1/login', {
+    "username": userNameLogin,
+    "password": passwordLogin
+    })
+    .then((response)=>{
+        localStorage.setItem("token",response.data.token);
+        localStorage.setItem("currentUser",JSON.stringify(response.data.user));
+        bootstrap.Modal.getInstance(document.getElementById("exampleModal")).hide();
+        const toastElement = document.getElementById('toast-success');
+        let toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    })
+    .catch((error)=>{
+        console.log(error);
+        alert("Not found maybe password or userName is wrong");
+    });
 }
