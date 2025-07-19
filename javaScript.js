@@ -1,11 +1,30 @@
-function setupui(){
+function getCurrentUser(){
+    let user = null;
+    const storageUser = localStorage.getItem("currentUser");
+    if(storageUser){
+        user = JSON.parse(storageUser);
+    }
+    return user
+}
+function setupui() {
+    console.log("setupui()");
     const token = localStorage.getItem("token");
     if(token){
         document.getElementById("login").style.display = "none";
         document.getElementById("register").style.display = "none";
+        document.getElementById("logOut").style.display = "block";
+        document.getElementById("navImageName").style.display = "block";
+        document.getElementById("navUserName").style.display = "block";
         document.getElementById("addPost").style.display = "flex";
-    }else{
+        const user = getCurrentUser();
+        document.getElementById("navUserName").innerHTML = `@${user.username}`;
+        document.getElementById("navImageName").src = `@${user.profile-image}`;
+    } else {
+        document.getElementById("login").style.display = "block";
+        document.getElementById("register").style.display = "block";
         document.getElementById("logOut").style.display = "none";
+        document.getElementById("navUserName").style.display = "none";
+        document.getElementById("navImageName").style.display = "none";
         document.getElementById("addPost").style.display = "none";
     }
 }
@@ -60,10 +79,7 @@ function loginBtnOnClick(){
         localStorage.setItem("token",response.data.token);
         localStorage.setItem("currentUser",JSON.stringify(response.data.user));
         bootstrap.Modal.getInstance(document.getElementById("exampleModal")).hide();
-        document.getElementById("login").style.display = "none";
-        document.getElementById("register").style.display = "none";
-        document.getElementById("logOut").style.display = "block";
-        document.getElementById("addPost").style.display = "flex";
+        setupui();
         const toastElement = document.getElementById('toast-success');
         let toast = new bootstrap.Toast(toastElement);
         toast.show();
@@ -80,15 +96,10 @@ function logOut(){
         Authorization: `Bearer ${token}`
     }
     })
-    .then(response => {
-        console.log("Logout successful", response.data);
+    .then(()=>{
         localStorage.removeItem("token");
         localStorage.removeItem("currentUser");
-        //window.location.reload();
-        document.getElementById("logOut").style.display = "none";
-        document.getElementById("login").style.display = "block";
-        document.getElementById("register").style.display = "block";
-        document.getElementById("addPost").style.display = "none";
+        setupui();
         const toastElement = document.getElementById('toast-success');
         let toast = new bootstrap.Toast(toastElement);
         toast.show();
@@ -103,7 +114,7 @@ function registerBtnClick(){
     let password = document.getElementById("register-password").value;
     const imageInput = document.getElementById("register-image").files[0];
     let formData = new FormData();
-    formData.append("userName",userName);
+    formData.append("username",userName);
     formData.append("name",name);
     formData.append("password",password);
     formData.append("image",imageInput);
@@ -116,17 +127,13 @@ function registerBtnClick(){
         localStorage.setItem("token",response.data.token);
         localStorage.setItem("currentUser",JSON.stringify(response.data.user));
         bootstrap.Modal.getInstance(document.getElementById("exampleModalRegister")).hide();
-        document.getElementById("login").style.display = "none";
-        document.getElementById("register").style.display = "none";
-        document.getElementById("logOut").style.display = "block";
-        document.getElementById("addPost").style.display = "flex";
+        setupui();
         const toastElement = document.getElementById('toast-success');
         let toast = new bootstrap.Toast(toastElement);
         toast.show();
     })
     .catch((error)=>{
         alert(error);
-        //alert("Not found maybe password or userName is wrong");
     });
 }
 function createNewPost(){
