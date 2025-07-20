@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <title>profile</title>
+</head>
+<body>
+     <!--nav-->
+     <div class="container">
+      <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm rounded">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">Tarmeez</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="profile.html">Profile</a>
+                </li>
+              </ul>
+              <div class="d-flex">
+                <button type="button" class="btn btn-outline-success mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal" id="login">Login</button>
+                <button type="button" class="btn btn-outline-success" id="register"data-bs-toggle="modal" data-bs-target="#exampleModalRegister">Register</button>
+                <div class="d-flex align-items-center ">
+                  <img src="" alt="" class="rounded-circle mx-2" width="40px" height="40px"id="navImageName">
+                  <b class="mx-2" id="navUserName"></b>
+                  <button type="button" class="btn btn-outline-danger" id="logOut" onclick="logOut()">log out</button>
+                </div>
+              </div>
+            </div>
+          </div>
+      </nav>
+      </div>
+        <!--content-->
+      <div class="container">
+        <div class="card w-100 mt-3" style="padding: 20px;">
+          <div class="row g-0 align-items-center">
+                <div class="col-md-2">
+                    <img src="https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg" class="img-fluid rounded-start" alt="" width="100px" height="100px">
+                </div>
+                <div class="col-md-5 d-flex flex-column justify-content-center" style="font-size: larger;font-weight: 600;">
+                    <div class="card-title">kerolesadel297@gmail.com</div>
+                    <div class="card-title">keroles</div>
+                    <div class="card-title">@keroles</div>
+                </div>
+                <div class="col-md-5 d-flex flex-column justify-content-center">
+                    <div class="card-title" style="color: rgb(172, 172, 172);font-weight: 100;">
+                        <span style="font-size: 50px;color: black;">13</span>posts
+                    </div>
+                    <div class="card-title" style="color: rgb(172, 172, 172);font-weight: 100;">
+                        <span style="font-size: 50px;color: black;">13</span>comments
+                    </div>
+              </div>
+          </div>
+        </div>
+        <div class="posts  mt-3"></div>
+    </div>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+    <script src="./profileScript.js"></script>
+    <script src="./mainLogic.js"></script>
+</body>
+</html>
