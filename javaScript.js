@@ -1,5 +1,6 @@
 let currentPage = 1;
 let lastPage = 1
+let idPost = "";
 window.addEventListener("scroll",()=>{
     const endOfHeight = window.innerHeight+window.pageYOffset >= document.body.offsetHeight;
     if (endOfHeight && currentPage < lastPage) {
@@ -7,39 +8,14 @@ window.addEventListener("scroll",()=>{
         getPosts(false, currentPage);
     }
 });
-function getCurrentUser(){
-    let user = null;
-    const storageUser = localStorage.getItem("currentUser");
-    if(storageUser){
-        user = JSON.parse(storageUser);
-    }
-    return user
+function postDetails(postid){
+    location=`postDetails.html?postId=${postid}`;
 }
-function setupui() {
-    console.log("setupui()");
-    const token = localStorage.getItem("token");
-    if(token){
-        document.getElementById("login").style.display = "none";
-        document.getElementById("register").style.display = "none";
-        document.getElementById("logOut").style.display = "block";
-        document.getElementById("navImageName").style.display = "block";
-        document.getElementById("navUserName").style.display = "block";
-        document.getElementById("addPost").style.display = "flex";
-        const user = getCurrentUser();
-        document.getElementById("navUserName").innerHTML = `@${user.username}`;
-        document.getElementById("navImageName").src = `${user.profile_image}`;
-    } else {
-        document.getElementById("login").style.display = "block";
-        document.getElementById("register").style.display = "block";
-        document.getElementById("logOut").style.display = "none";
-        document.getElementById("navUserName").style.display = "none";
-        document.getElementById("navImageName").style.display = "none";
-        document.getElementById("addPost").style.display = "none";
-    }
-}
-setupui();
 function getPosts(reload = true,page){
     let posts = document.querySelector(".posts");
+    if (!posts) {
+        return;
+    }
     axios.get(`https://tarmeezacademy.com/api/v1/posts?limit=5&page=${page}`)
     .then((response)=>{
         console.log(response);
@@ -48,18 +24,31 @@ function getPosts(reload = true,page){
             posts.innerHTML = "";
         }
         let tags;
+        let user = getCurrentUser();
+        let isMyPost;
+        let editButtonContent =``;
         let p = response.data.data.map((ele)=>{
+            isMyPost = user != null&&ele.author.id===user.id;
+            if(isMyPost){
+                editButtonContent = `<button class="rounded"
+                                style="float:right;background-color: gray;color:white"
+                                onclick='editPsotBtnClicked("${ele.title}", "${ele.body}", ${ele.id})'
+                                data-bs-toggle="modal" data-bs-target="#editPost"
+                                id="editBtn">Edit
+                            </button>`
+            }
             tags = Array.isArray(ele.tags)
             ? ele.tags.map(t => `<button type="button" class="btn btn-secondary mx-1">${t.name}</button>`).join(''): '';          
             return(
                 `
                     <div class="card shadow-sm my-2">
                         <div class="card-header">
-                            <img src="${typeof ele.author.profile_image === 'string' ? ele.author.profile_image : 'default.jpg'}" alt="" style="width: 40px;height: 40px;" class="rounded-circle shadow-sm">
+                            <img src="${typeof ele.author.profile_image === 'string' ? ele.author.profile_image : 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'}" alt="" style="width: 40px;height: 40px;" class="rounded-circle shadow-sm">
                             <b>@${ele.author.username}</b>
+                            ${editButtonContent}
                         </div>
-                        <div class="card-body">
-                            <img src="${typeof ele.image === 'string' ? ele.image : 'default-post.jpg'}" class="w-100" alt="">
+                        <div class="card-body" onClick="postDetails(${ele.id})"style="cursor: pointer">
+                            <img src="${typeof ele.image === 'string' ? ele.image : ''}" class="w-100" alt="">
                             <h6 class="text-secondary">${ele.created_at}</h6>
                             <h5>${ele.title}</h5>
                             <p>${ele.body}</p>
@@ -81,27 +70,6 @@ function getPosts(reload = true,page){
     })
 }
 getPosts();
-function loginBtnOnClick(){
-    let userNameLogin = document.getElementById("recipient-name").value;
-    let passwordLogin = document.getElementById("exampleInputPassword1").value;
-    axios.post('https://tarmeezacademy.com/api/v1/login', {
-    "username": userNameLogin,
-    "password": passwordLogin
-    })
-    .then((response)=>{
-        localStorage.setItem("token",response.data.token);
-        localStorage.setItem("currentUser",JSON.stringify(response.data.user));
-        bootstrap.Modal.getInstance(document.getElementById("exampleModal")).hide();
-        setupui();
-        const toastElement = document.getElementById('toast-success');
-        let toast = new bootstrap.Toast(toastElement);
-        toast.show();
-    })
-    .catch((error)=>{
-        console.log(error);
-        alert("Not found maybe password or userName is wrong");
-    });
-}
 function logOut(){
     const token = localStorage.getItem("token");
     axios.post("https://tarmeezacademy.com/api/v1/logout", {}, {
@@ -119,34 +87,6 @@ function logOut(){
     })
     .catch(error => {
         console.error("Logout failed", error.response.data);
-    });
-}
-function registerBtnClick(){
-    let userName = document.getElementById("register-userName").value;
-    let name = document.getElementById("register-name").value;
-    let password = document.getElementById("register-password").value;
-    const imageInput = document.getElementById("register-image").files[0];
-    let formData = new FormData();
-    formData.append("username",userName);
-    formData.append("name",name);
-    formData.append("password",password);
-    formData.append("image",imageInput);
-    axios.post('https://tarmeezacademy.com/api/v1/register',formData,{
-        headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    })
-    .then((response)=>{
-        localStorage.setItem("token",response.data.token);
-        localStorage.setItem("currentUser",JSON.stringify(response.data.user));
-        bootstrap.Modal.getInstance(document.getElementById("exampleModalRegister")).hide();
-        setupui();
-        const toastElement = document.getElementById('toast-success');
-        let toast = new bootstrap.Toast(toastElement);
-        toast.show();
-    })
-    .catch((error)=>{
-        alert(error);
     });
 }
 function createNewPost(){
@@ -175,3 +115,36 @@ function createNewPost(){
         alert(error.response.data.message);
     });
 }
+function editPsotBtnClicked(title, body, id) {
+    document.getElementById("editPost-poat-title").value = title;
+    document.getElementById("editPost-poat-body").value = body;
+    idPost = id;
+}
+function editDataPost() {
+    const token = localStorage.getItem("token");
+    const title = document.getElementById("editPost-poat-title").value;
+    const body = document.getElementById("editPost-poat-body").value;
+    const data = {
+      title,
+      body
+    };
+    axios.put(`https://tarmeezacademy.com/api/v1/posts/${idPost}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
+    .then((response) => {
+      console.log("✅ Edited", response.data);
+      const modal = bootstrap.Modal.getInstance(document.getElementById('editPost'));
+      modal.hide();
+      getPosts();
+      const toastElement = document.getElementById('toast-success');
+      let toast = new bootstrap.Toast(toastElement);
+      toast.show();
+    })
+    .catch((error) => {
+      console.error("❌ Error editing post", error.response?.data || error);
+    });
+  }
+  

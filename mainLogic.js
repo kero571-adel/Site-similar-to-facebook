@@ -11,31 +11,45 @@ function setupui() {
     console.log("setupui()");
     const token = localStorage.getItem("token");
     let addPost = document.getElementById("addPost");
-    if(token){
-        document.getElementById("login").style.display = "none";
-        document.getElementById("register").style.display = "none";
-        document.getElementById("logOut").style.display = "block";
-        document.getElementById("navImageName").style.display = "block";
-        document.getElementById("navUserName").style.display = "block";
-        document.getElementById("send").style.display = "block";
-        document.getElementById("postComment").style.display = "block";
-        if(addPost){
-            addPost.style.display = "flex";
-        }
+
+    const loginBtn = document.getElementById("login");
+    const registerBtn = document.getElementById("register");
+    const logoutBtn = document.getElementById("logOut");
+    const navUserName = document.getElementById("navUserName");
+    const navImageName = document.getElementById("navImageName");
+    const sendBtn = document.getElementById("send");
+    const postComment = document.getElementById("postComment");
+    const editBtns = document.querySelectorAll("#editBtn");
+
+    if (token) {
+        if (loginBtn) loginBtn.style.display = "none";
+        if (registerBtn) registerBtn.style.display = "none";
+        if (logoutBtn) logoutBtn.style.display = "block";
+        if (navImageName) navImageName.style.display = "block";
+        if (navUserName) navUserName.style.display = "block";
+        if (sendBtn) sendBtn.style.display = "block";
+        if (postComment) postComment.style.display = "block";
+        if (addPost) addPost.style.display = "flex";
+        editBtns.forEach(btn => {
+            btn.style.display = "block";
+          });          
+
         const user = getCurrentUser();
-        document.getElementById("navUserName").innerHTML = `@${user.username}`;
-        document.getElementById("navImageName").src = `${user.profile_image}`;
+        if (navUserName) navUserName.innerHTML = `@${user.username}`;
+        if (navImageName) navImageName.src = `${typeof user.profile_image === 'string' ? user.profile_image : 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'}`;
     } else {
-        document.getElementById("login").style.display = "block";
-        document.getElementById("register").style.display = "block";
-        document.getElementById("logOut").style.display = "none";
-        document.getElementById("navUserName").style.display = "none";
-        document.getElementById("navImageName").style.display = "none";
-        document.getElementById("send").style.display = "none";
-        document.getElementById("postComment").style.display = "none";
-        if(addPost){
-            addPost.style.display = "none";
-        }
+        if (loginBtn) loginBtn.style.display = "block";
+        if (registerBtn) registerBtn.style.display = "block";
+        if (logoutBtn) logoutBtn.style.display = "none";
+        if (navUserName) navUserName.style.display = "none";
+        if (navImageName) navImageName.style.display = "none";
+        if (sendBtn) sendBtn.style.display = "none";
+        if (postComment) postComment.style.display = "none";
+        if (addPost) addPost.style.display = "none";
+        editBtns.forEach(btn => {
+            btn.style.display = "none";
+          });
+          
     }
 }
 function loginBtnOnClick(){
@@ -84,6 +98,6 @@ function registerBtnClick(){
         toast.show();
     })
     .catch((error)=>{
-        alert(error);
+       alert(error);
     });
 }
