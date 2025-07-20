@@ -1,3 +1,12 @@
+let currentPage = 1;
+let lastPage = 1
+window.addEventListener("scroll",()=>{
+    const endOfHeight = window.innerHeight+window.pageYOffset >= document.body.offsetHeight;
+    if (endOfHeight && currentPage < lastPage) {
+        currentPage += 1;
+        getPosts(false, currentPage);
+    }
+});
 function getCurrentUser(){
     let user = null;
     const storageUser = localStorage.getItem("currentUser");
@@ -18,7 +27,7 @@ function setupui() {
         document.getElementById("addPost").style.display = "flex";
         const user = getCurrentUser();
         document.getElementById("navUserName").innerHTML = `@${user.username}`;
-        document.getElementById("navImageName").src = `@${user.profile-image}`;
+        document.getElementById("navImageName").src = `${user.profile_image}`;
     } else {
         document.getElementById("login").style.display = "block";
         document.getElementById("register").style.display = "block";
@@ -29,11 +38,15 @@ function setupui() {
     }
 }
 setupui();
-function getPosts(){
+function getPosts(reload = true,page){
     let posts = document.querySelector(".posts");
-    axios.get('https://tarmeezacademy.com/api/v1/posts?limit=5')
+    axios.get(`https://tarmeezacademy.com/api/v1/posts?limit=5&page=${page}`)
     .then((response)=>{
         console.log(response);
+        lastPage = response.data.meta.last_page;
+        if(reload){
+            posts.innerHTML = "";
+        }
         let tags;
         let p = response.data.data.map((ele)=>{
             tags = Array.isArray(ele.tags)
@@ -61,7 +74,7 @@ function getPosts(){
                 `
             )
         });
-        posts.innerHTML = p.join('');
+        posts.innerHTML += p.join('');
     })
     .catch((error)=>{
         alert(error);
