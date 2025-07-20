@@ -25,18 +25,15 @@ function getPosts(reload = true,page){
         }
         let tags;
         let user = getCurrentUser();
-        let isMyPost;
-        let editButtonContent =``;
-        let p = response.data.data.map((ele)=>{
-            isMyPost = user != null&&ele.author.id===user.id;
-            if(isMyPost){
-                editButtonContent = `<button class="rounded"
-                                style="float:right;background-color: gray;color:white"
-                                onclick='editPsotBtnClicked("${ele.title}", "${ele.body}", ${ele.id})'
-                                data-bs-toggle="modal" data-bs-target="#editPost"
-                                id="editBtn">Edit
-                            </button>`
-            }
+        let p = response.data.data.map((ele) => {
+            let editButtonContent = ``;
+            const isMyPost = user != null && ele.author.id === user.id;
+            if (isMyPost) {
+                editButtonContent = `
+                    <button class="rounded" style="float:right;background-color: gray;color:white;font-weight:bold" onclick='editPsotBtnClicked("${ele.title}", "${ele.body}", ${ele.id})' data-bs-toggle="modal" data-bs-target="#editPost" id="editBtn">Edit</button>
+                    <button class="rounded mx-3" style="float:right;background-color: red;color:white; font-weight:bold" onclick='${idPost=ele.id}' data-bs-toggle="modal" data-bs-target="#delPost" id="deltBtn">delete</button>
+                `;
+            }        
             tags = Array.isArray(ele.tags)
             ? ele.tags.map(t => `<button type="button" class="btn btn-secondary mx-1">${t.name}</button>`).join(''): '';          
             return(
@@ -146,5 +143,25 @@ function editDataPost() {
     .catch((error) => {
       console.error("❌ Error editing post", error.response?.data || error);
     });
-  }
+}
+function delPost() {
+    const token = localStorage.getItem("token");
+    axios.delete(`https://tarmeezacademy.com/api/v1/posts/${idPost}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then((response) => {
+      console.log("✅ Edited", response.data);
+      const modal = bootstrap.Modal.getInstance(document.getElementById('delPost'));
+      modal.hide();
+      getPosts();
+      const toastElement = document.getElementById('toast-success');
+      let toast = new bootstrap.Toast(toastElement);
+      toast.show();
+    })
+    .catch((error) => {
+      console.error("❌ Error editing post", error.response?.data || error);
+    });
+}
   
