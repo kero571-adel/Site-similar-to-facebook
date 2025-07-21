@@ -1,7 +1,10 @@
+setupui();
 let currentPage = 1;
 let lastPage = 1
 let idPost = "";
-setupui();
+//profile page
+
+//profile page
 window.addEventListener("scroll",()=>{
     const endOfHeight = window.innerHeight+window.pageYOffset >= document.body.offsetHeight;
     if (endOfHeight && currentPage < lastPage) {

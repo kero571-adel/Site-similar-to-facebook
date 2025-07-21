@@ -8,28 +8,30 @@
     <title>Document</title>
 </head>
 <body>
+    <!--loader-->
+    <div class="loader"></div>
     <!--nav-->
     <div class="container">
         <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm rounded">
             <div class="container-fluid">
-              <a class="navbar-brand" href="#index.html">Tarmeez</a>
+              <a class="navbar-brand" href="index.html">Tarmeez</a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link active" aria-current="page" href="index.html">Home</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Profile</a>
+                    <a class="nav-link" onclick="profiledClick()" style="cursor: pointer;">Profile</a>
                   </li>
                 </ul>
                 <div class="d-flex">
                   <button type="button" class="btn btn-outline-success mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal" id="login">Login</button>
                   <button type="button" class="btn btn-outline-success" id="register"data-bs-toggle="modal" data-bs-target="#exampleModalRegister">Register</button>
                   <div class="d-flex align-items-center ">
-                    <img src="" alt="" class="rounded-circle mx-2" width="40px" height="40px"id="navImageName">
+                    <img src="" alt="" class="rounded-circle mx-2" width="40px" height="40px"id="navImageName"onclick="profiledClick()" style="cursor: pointer;">
                     <b class="mx-2" id="navUserName"></b>
                     <button type="button" class="btn btn-outline-danger" id="logOut" onclick="logOut()">log out</button>
                   </div>
@@ -64,7 +66,7 @@
             <div class="p-3 rounded"style="background-color:#bfbcbc"id="comments"></div>
             <div class="mb-3 d-flex">
                 <input type="text" class="form-control" id="postComment" placeholder="add your comment">
-                <button class="btn-primary"onClick="createCommentClick()"id="send">Send</button>
+                <button type="button" class="btn btn-primary"onClick="createCommentClick()"id="send">Send</button>
             </div>
         </div>
     </div>
@@ -172,65 +174,7 @@
     </div>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./node_modules/axios/dist/axios.min.js"></script>
-    <script src="javaScript.js"></script>
-    <script src="./mainLogic.js"></script>
+    <script src="scriptpostDetails.js"></script>
+    <script src="./javaScript01.js"></script>
 </body>
-<script>
-    const urlPrams = new URLSearchParams(window.location.search);
-    const id = urlPrams.get("postId");
-    let commentsPost = ``;
-    function getPostsDetails(id){
-        let posts = document.querySelector(".showPost");
-        axios.get(`https://tarmeezacademy.com/api/v1/posts/${id}`)
-            .then((response)=>{
-                const post = response.data.data;
-                const comments = post.comments;
-                const author = post.author;
-                for(commit of post.comments){
-                commentsPost +=
-                `
-                <div>
-                    <img src="${commit.author.profile_image}" alt="" class="rounded-circle"style="width: 40px;height: 40px;">
-                    <b>@${commit.author.username}</b>
-                </div>
-                <div>${commit.body}</div>
-                `
-            }
-           document.getElementById("comments").innerHTML = commentsPost;
-           document.getElementById("username-span").innerHTML = author.username;
-           document.getElementById("showPostUserName").innerHTML = author.username;
-           document.getElementById("showPostimage").src = author.profile_image;
-           document.getElementById("image-card-body").src = post.image;
-           document.getElementById("time").innerHTML = author.created_at;
-           document.getElementById("title").innerHTML = post.title;
-           document.getElementById("p").innerHTML = post.body;
-           document.getElementById("comment").innerHTML = `(${post.comments_count}) comment`;
-        })
-        .catch((error)=>{
-            alert(error);
-        })
-    }
-    function createCommentClick(id){
-        let commentBody = document.getElementById("postComment").value;
-        const token = localStorage.getItem("token");
-        axios.post(`https://tarmeezacademy.com/api/v1/posts/${id}/comments`, {
-            "body":commentBody
-        }, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-        })
-        .then(()=>{
-            getPostsDetails();
-            const toastElement = document.getElementById('toast-success');
-            let toast = new bootstrap.Toast(toastElement);
-            toast.show();
-        })
-        .catch(error => {
-            console.error("Logout failed", error.response.data);
-        });
-    }
-    createCommentClick(id);
-    getPostsDetails(id);
-</script>
 </html>

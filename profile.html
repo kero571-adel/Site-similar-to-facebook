@@ -8,6 +8,8 @@
     <title>profile</title>
 </head>
 <body>
+    <!--loader-->
+    <div class="loader"></div>
      <!--nav-->
      <div class="container">
       <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm rounded">
@@ -22,14 +24,14 @@
                   <a class="nav-link active" aria-current="page" href="index.html">Home</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="profile.html">Profile</a>
+                  <a class="nav-link" onclick="profiledClick()" style="cursor: pointer;">Profile</a>
                 </li>
               </ul>
               <div class="d-flex">
                 <button type="button" class="btn btn-outline-success mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal" id="login">Login</button>
                 <button type="button" class="btn btn-outline-success" id="register"data-bs-toggle="modal" data-bs-target="#exampleModalRegister">Register</button>
                 <div class="d-flex align-items-center ">
-                  <img src="" alt="" class="rounded-circle mx-2" width="40px" height="40px"id="navImageName">
+                  <img src="" alt="" class="rounded-circle mx-2" width="40px" height="40px"id="navImageName"onclick="profiledClick()" style="cursor: pointer;">
                   <b class="mx-2" id="navUserName"></b>
                   <button type="button" class="btn btn-outline-danger" id="logOut" onclick="logOut()">log out</button>
                 </div>
@@ -43,28 +45,145 @@
         <div class="card w-100 mt-3" style="padding: 20px;">
           <div class="row g-0 align-items-center">
                 <div class="col-md-2">
-                    <img src="https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg" class="img-fluid rounded-start" alt="" width="100px" height="100px">
+                    <img src="" class="img-fluid rounded-start" alt="" width="100px" height="100px" id="image">
                 </div>
                 <div class="col-md-5 d-flex flex-column justify-content-center" style="font-size: larger;font-weight: 600;">
-                    <div class="card-title">kerolesadel297@gmail.com</div>
-                    <div class="card-title">keroles</div>
-                    <div class="card-title">@keroles</div>
+                    <div id="email"></div>
+                    <div id="name"></div>
+                    <div id="userName"></div>
                 </div>
                 <div class="col-md-5 d-flex flex-column justify-content-center">
-                    <div class="card-title" style="color: rgb(172, 172, 172);font-weight: 100;">
-                        <span style="font-size: 50px;color: black;">13</span>posts
+                    <div style="color: rgb(172, 172, 172);font-weight: 100;">
+                        <span style="font-size: 50px;color: black;"id="postCount"></span>posts
                     </div>
-                    <div class="card-title" style="color: rgb(172, 172, 172);font-weight: 100;">
-                        <span style="font-size: 50px;color: black;">13</span>comments
+                    <div style="color: rgb(172, 172, 172);font-weight: 100;">
+                        <span style="font-size: 50px;color: black;"id="commentCount"></span>comments
                     </div>
               </div>
           </div>
         </div>
-        <div class="posts  mt-3"></div>
+        <h2><span id="name-post"></span> posts</h2>
+        <div class="userPosts  mt-3"></div>
     </div>
+  </div>
+  <!--edit Post-->
+  <div class="modal fade" id="editPost" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">EditPost</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">title:</label>
+              <input type="text" class="form-control" id="editPost-poat-title">
+            </div>
+            <div class="mb-3">
+              <textarea type="text" class="form-control rounded shadow-sm" style="width: 100%;height: 100px;" id="editPost-poat-body"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onClick="editDataPost()">ubdate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--delete modal-->
+  <div class="modal" tabindex="-1" id="delPost">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-danger">Delte Post</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal">No</button>
+          <button type="button" class="btn btn-danger"onClick="delPost()">es i am</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Login-->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Login</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">userName:</label>
+              <input type="text" class="form-control" id="recipient-name" value="kero">
+            </div>
+            <div class="mb-3">
+              <label for="message-text" class="col-form-label">Password:</label>
+              <input type="password" class="form-control" id="exampleInputPassword1" value="123456">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="loginBtnOnClick()">Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--register-->
+  <div class="modal fade" id="exampleModalRegister" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">register A new user</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">userName:</label>
+              <input type="text" class="form-control" id="register-userName">
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Name:</label>
+              <input type="text" class="form-control" id="register-name">
+            </div>
+            <div class="mb-3">
+              <label for="message-text" class="col-form-label">Password:</label>
+              <input type="password" class="form-control" id="register-password">
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">image:</label>
+              <input type="file" id="register-image"/>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onClick="registerBtnClick()">register</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--toast-->
+  <div class="toast align-items-center text-bg-success border-0 position-fixed bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true" id="toast-success">
+    <div class="d-flex">
+      <div class="toast-body">
+        success.
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto text-lg" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./node_modules/axios/dist/axios.min.js"></script>
     <script src="./profileScript.js"></script>
-    <script src="./mainLogic.js"></script>
+    <script src="./javaScript01.js"></script>
 </body>
 </html>
